@@ -15,7 +15,21 @@ local myText6
 local myText7
 local myText8
 local myText9
+local Destination = {}
+Destination.x = 0
+Destination.y = 0
 
+local abs = math.abs
+local atan = math.atan
+local atan2 = math.atan2
+local rad = math.rad
+local deg = math.deg
+local pi = math.pi
+local pi2 = pi * 2
+local sqrt = math.sqrt
+local floor = math.floor
+local cos = math.cos
+local sin = math.sin
 
 
 -- Test = display.newImage( "images/img_Backdrop2.png")
@@ -124,7 +138,47 @@ local container = display.newContainer( 639, 639 )
 container:insert( myMapGroup, true ) 
 
 
+function angle(x1, y1, x2, y2)
+        local xDelta, yDelta = x2-x1, y2-y1
+        local angle = atan2(yDelta, xDelta) * 180 / math.pi
+        return angle
+end
+ 
+function calcVector(obj1,obj2)
+    local xDist = obj1.x - obj2.x
+    local yDist = obj1.y - obj2.y
+    local dist = 5
+    
+    local angle = -( atan2( yDist , xDist ) * ( 180 / pi ) ) + 90
+    local xFinal = obj1.x +( sin( angle * pi / 180 ) * dist )
+    local yFinal = obj1.y +( cos( angle * pi / 180 ) * dist )
+    final = {}
+    final.angle = angle
+            
+    local distance = sqrt ( ( xDist * xDist ) + ( yDist * yDist ) )
+        if(distance>dist) then
+            final.vx = obj1.x - xFinal
+            final.vy = obj1.y - yFinal
+            else
+            final.vx = 0
+            final.vy = 0
+            end
+           
+            return final
 
+end
+
+local onUpdate = function( event )
+
+ print ("OMG: " .. Destination.x .. "  /  " .. Destination.y)
+ 	math.floor(Destination.x)
+ 	math.floor(Destination.y)
+ 	if Destination.x ~=0 or Destination.y ~=0 then
+	    temp = calcVector(myMapGroup, Destination)
+	    myMapGroup.x = myMapGroup.x + temp.vx
+	    myMapGroup.y = myMapGroup.y  + temp.vy
+	end
+end
 
 -- Move the screen
 onScreenSwipeMap = function( event )
@@ -153,7 +207,8 @@ onScreenSwipeMap = function( event )
 		if (event.x - t.x0) < -(minmov) then		-- Swipe right   and areaSquareX < 204 
 		io.write("\nMOVING RIGHT!!!!     <-----I====================> t.x0="..event.x - t.x0)
 		
-		myMapGroup.x = myMapGroup.x+(event.x - t.x0)
+		Destination.x = myMapGroup.x+(event.x - t.x0)
+		--myMapGroup.x = myMapGroup.x -1 -- myMapGroup.x+1(event.x - t.x0)
 		t.x0 = event.x
 		t.y0 = event.y
 
@@ -162,7 +217,8 @@ onScreenSwipeMap = function( event )
 		elseif (event.x - t.x0) > (minmov) then -- Swipe Left    and areaSquareX > 92 
 		io.write ("\nMOVING LEFT!!!!     <-----I====================> t.x0="..event.x - t.x0)
 
-		myMapGroup.x = myMapGroup.x+(event.x - t.x0)
+		Destination.x = myMapGroup.x+(event.x - t.x0)
+		--myMapGroup.x =  myMapGroup.x +1 -- myMapGroup.x+(event.x - t.x0)
 		t.x0 = event.x
 		t.y0 = event.y
 
@@ -172,14 +228,18 @@ onScreenSwipeMap = function( event )
 
 		if (event.y - t.y0) > minmov then	-- Swipe Down     and areaSquareY > 408 
 		io.write ("\nMOVING UP!!!!     <-----I====================> t.x0="..event.y - t.y0)
-		myMapGroup.y = myMapGroup.y+(event.y - t.y0)
+		
+		Destination.y = myMapGroup.y+(event.y - t.y0)
+		--myMapGroup.y =  myMapGroup.y +1 -- myMapGroup.y+(event.y - t.y0)
 		t.x0 = event.x
 		t.y0 = event.y
 		
 
 		elseif (event.y - t.y0) < -minmov  then	-- Swipe Down    and areaSquareY < 456 
 		io.write ("\nMOVING DOWN!!!!     <-----I====================> t.x0="..event.y - t.y0)
-		myMapGroup.y = myMapGroup.y+(event.y - t.y0)
+		
+		Destination.y = myMapGroup.y+(event.y - t.y0)
+		--myMapGroup.y = myMapGroup.y -1 -- myMapGroup.y+(event.y - t.y0)
 		t.x0 = event.x
 		t.y0 = event.y
 		
@@ -189,8 +249,8 @@ onScreenSwipeMap = function( event )
 	myText3.text = ( "X: ".. myMapGroup.x)
 	myText4.text = ( "Y: ".. myMapGroup.y)
 
-	if myMapGroup.x >1 then myMapGroup.x=0;end
-	if myMapGroup.y >1 then myMapGroup.y=0;end
+	if myMapGroup.x >1 then myMapGroup.x=0;Destination.x=0;end
+	if myMapGroup.y >1 then myMapGroup.y=0;Destination.y=0;end
 	if myMapGroup.x < (currentMap.xBounds*-1) then myMapGroup.x = (currentMap.xBounds*-1); end
 	if myMapGroup.y < (currentMap.yBounds*-1) then myMapGroup.y = (currentMap.yBounds*-1); end
 
@@ -224,19 +284,9 @@ mapTouchArea.anchorX = 0
 mapTouchArea.isVisible = false
 mapTouchArea.isHitTestable = true
 
+Destination.x = myMapGroup.x
+Destination.x = myMapGroup.y
+
 mapTouchArea:addEventListener( 'touch', onScreenSwipeMap )
+Runtime:addEventListener( "enterFrame", onUpdate )
 
-
-
-
-	
---[[
-        nrgProgressBar = display.newContainer(interfaceGroup,240,35)
-        nrgProgressBar.anchorChildren = false
-        nrgProgressBar.x = 516.5
-        nrgProgressBar.y = 451
-        nrgfillbar = display.newImageRect( nrgProgressBar, _Sheet, _Nfo:getFrameIndex("nrgfillbar-ui"), 240, 35 )
-        nrgfillbar.x = 0
-        nrgfillbar.y = 0
-
-]]
