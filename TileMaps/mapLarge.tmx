@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="20" height="16" tilewidth="20" tileheight="20">
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="20" tileheight="20">
  <tileset firstgid="1" name="mapTiles" tilewidth="20" tileheight="20">
   <image source="../images/TileMap.png" width="100" height="100"/>
  </tileset>
- <layer name="Tile Layer 1" width="20" height="16">
+ <layer name="land" width="50" height="50">
   <properties>
-   <property name="mapName" value="Foo"/>
+   <property name="mapName" value="Ferathorn"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYKUyZkKisWFWIuSZsJhJCaamWcT6Y7iaNxofw9s8WsQvtcsDamEAtFQDdw==
+   eJzdmMuuxCAMQ6tO+/+/PCskFNmJEyhlZhHpPoD64CTQ3sdx3H8WJwn1/zsE06jG2/qzDJ8udmOpMCCeX+BgDDM5+jV39EPVh9atsKCcV1ja8y6wN2i8ypCtv6h+I5b290v0z7Koz36LQ2WJnpvNKZWDjb+SLD3HKAPi8GpZ4fBY+p9Znxnpu1UOy3Afui+oZ0b9VO29St+w0ftwH9wXpW8xXW2tzBzmc8TQ912FRdXRr1PNORtWN2KwYzP16zHM5KgwI11KLlhPRzRkPFHHegy97lEOb++iurjN7worW7NS497eoHsTW9fTm9k7lJMVhiifK/njBTtPKzVe4cj0L89P5W7wFAfSrvQklO/Kfa1aH20tj4GxR/nvcVTfP1TvPd+8OWqueCxZhlEONp7553Fk72KjrNGeZfNjFcOKeEr/jBwdyfXZ+VOZy76vrGaoaLDzWp33fegtBlXDCeb3PXeVJ4xBYUFz7Zm/kkP97lBh2InDarH9wI5dzZD1g/UC5MsuvcpqjTgjD1eyZHSiGvg1DtaTqgzV98psbrGzwfpRuQ+cYN1ZLKiu2fts5syM9m4Wh+INO6+rDGyvVrGM+MA4nvAket4oQ1SDszk8ruq8qE+s4BjhZt8OEcvbuhEH+/bFcndXjsbi6dydw2qMxr2tdWV8AZ3+J4I=
   </data>
  </layer>
 </map>

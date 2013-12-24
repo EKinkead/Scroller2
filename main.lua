@@ -4,6 +4,20 @@ require ("loq_util")
 display.setStatusBar( display.HiddenStatusBar ) -- Get rid of that thing
 display.setDefault ("magTextureFilter", "nearest") -- make it nice and pixeled
 
+local currentMap = {}
+local myTable = {}
+local myText1
+local myText2
+local myText3
+local myText4
+local myText5
+local myText6
+local myText7
+local myText8
+local myText9
+
+
+
 -- Test = display.newImage( "images/img_Backdrop2.png")
 
 -- Some kind of map thing
@@ -12,8 +26,8 @@ display.setDefault ("magTextureFilter", "nearest") -- make it nice and pixeled
 -- Set up the map. Best to NOT do this with hardcoded Numbers, so you can make minimaps, etc.
 
 
---myTable = require("TileMaps.mapLarge") - testing a large map
-myTable = require("TileMaps.16x16start")
+myTable = require("TileMaps.mapLarge") -- testing a large map
+--myTable = require("TileMaps.16x16start")
 atrace (xinspect(myTable))
 
 
@@ -23,11 +37,14 @@ print (myTable.width)
 print (myTable.height)
 print (myTable.tileheight)
 
-local currentMap = {}
+
 currentMap.mapWidth = myTable.width -- This is how many items(rows) are in 1 row of a map.
 currentMap.mapHeigth = myTable.height -- This is how many down
-currentMap.TileSizeSquared = myTable.width -- how many pixels a square
+currentMap.TileSizeSquared = myTable.tileheight -- how many pixels a square
 -- mapHeigth = 
+currentMap.xBounds = myTable.tilewidth*myTable.width
+currentMap.yBounds = myTable.tileheight*myTable.height
+
 
 -- print (currentMap.TileSizeSquared)
 
@@ -53,11 +70,7 @@ currentMap.mapData = {
 			}
 ]]
 -- OK.  We have a map.  Now we draw it...
-local myText1 = display.newText( "MapName: "..  myTable.layers[1].properties.mapName, 330, 20, native.systemFont, 12 )
-myText1.anchorX = 0 ; myText1.anchorY = 1
 
-local myText2 = display.newText( "MapType: "..  myTable.layers[1].name, 330, 40, native.systemFont, 12 )
-myText2 .anchorX = 0 ; myText2.anchorY = 1
 
 
 
@@ -94,6 +107,8 @@ for row=1, (currentMap.mapHeigth) do  -- This will start at the top first row an
 				currentTile.x = currentTile.x + (column-1) * currentMap.TileSizeSquared  -- more MAGIC STEP. since we set that first row to ZERO, if you are on it it won't multiply an extra 20
  				currentTile.y = currentTile.y + drawY
 
+ 				myMapGroup:insert(currentTile)
+
 			end
 
 			drawY = drawY + currentMap.TileSizeSquared -- this moves the tiledrawn down 1 on the app screen
@@ -101,3 +116,127 @@ for row=1, (currentMap.mapHeigth) do  -- This will start at the top first row an
 			io.write ("\n") -- This moves the terminal to the next line
 
 end
+
+
+
+-- Put the map in a container
+local container = display.newContainer( 639, 639 )
+container:insert( myMapGroup, true ) 
+
+
+
+
+-- Move the screen
+onScreenSwipeMap = function( event )
+
+    local t = event.target
+	local phase = event.phase 
+	local minmov = 16	-- Minimum movement that registers
+
+	if "began" == phase then
+		-- display.getCurrentStage():setFocus(t)
+		t.isFocus = true
+		t.x0 = event.x
+		t.y0 = event.y
+		print ("Event.X:" .. event.x)
+		print ("Event.Y:" .. event.y)
+
+	elseif ("ended" == phase or "cancelled" == phase) then --  and t.x0 ~= nil and t.y0 ~= nil then
+		display.getCurrentStage():setFocus( nil )
+		t.isFocus = false
+		t.x0 = nil   
+		t.y0 = nil 
+	end
+
+	if t.x0 ~= nil and t.y0 ~= nil then
+	---- CHECK DOWN/UP
+		if (event.x - t.x0) < -(minmov) then		-- Swipe right   and areaSquareX < 204 
+		io.write("\nMOVING RIGHT!!!!     <-----I====================> t.x0="..event.x - t.x0)
+		
+		myMapGroup.x = myMapGroup.x+(event.x - t.x0)
+		t.x0 = event.x
+		t.y0 = event.y
+
+		
+
+		elseif (event.x - t.x0) > (minmov) then -- Swipe Left    and areaSquareX > 92 
+		io.write ("\nMOVING LEFT!!!!     <-----I====================> t.x0="..event.x - t.x0)
+
+		myMapGroup.x = myMapGroup.x+(event.x - t.x0)
+		t.x0 = event.x
+		t.y0 = event.y
+
+		end
+		
+		---- CHECK DOWN/UP
+
+		if (event.y - t.y0) > minmov then	-- Swipe Down     and areaSquareY > 408 
+		io.write ("\nMOVING UP!!!!     <-----I====================> t.x0="..event.y - t.y0)
+		myMapGroup.y = myMapGroup.y+(event.y - t.y0)
+		t.x0 = event.x
+		t.y0 = event.y
+		
+
+		elseif (event.y - t.y0) < -minmov  then	-- Swipe Down    and areaSquareY < 456 
+		io.write ("\nMOVING DOWN!!!!     <-----I====================> t.x0="..event.y - t.y0)
+		myMapGroup.y = myMapGroup.y+(event.y - t.y0)
+		t.x0 = event.x
+		t.y0 = event.y
+		
+		end
+
+	end
+	myText3.text = ( "X: ".. myMapGroup.x)
+	myText4.text = ( "Y: ".. myMapGroup.y)
+
+	if myMapGroup.x >1 then myMapGroup.x=0;end
+	if myMapGroup.y >1 then myMapGroup.y=0;end
+	if myMapGroup.x < (currentMap.xBounds*-1) then myMapGroup.x = (currentMap.xBounds*-1); end
+	if myMapGroup.y < (currentMap.yBounds*-1) then myMapGroup.y = (currentMap.yBounds*-1); end
+
+	return true
+end
+
+
+myText1 = display.newText( "MapName: "..  myTable.layers[1].properties.mapName, 330, 20, native.systemFont, 12 )
+myText1.anchorX = 0 ; myText1.anchorY = 1
+
+myText2 = display.newText( "MapType: "..  myTable.layers[1].name, 330, 40, native.systemFont, 12 )
+myText2 .anchorX = 0 ; myText2.anchorY = 1
+
+myText3 = display.newText( "X: ".. myMapGroup.x, 330, 60, native.systemFont, 12 )
+myText3 .anchorX = 0 ; myText3.anchorY = 1
+
+myText4 = display.newText( "Y: "..  myMapGroup.y, 330, 80, native.systemFont, 12 )
+myText4 .anchorX = 0 ; myText4.anchorY = 1
+
+myText5 = display.newText( "xBounds: "..  currentMap.xBounds, 330, 100, native.systemFont, 12 )
+myText5 .anchorX = 0 ; myText5.anchorY = 1
+
+myText6 = display.newText( "yBounds: "..  currentMap.yBounds, 330, 120, native.systemFont, 12 )
+myText6 .anchorX = 0 ; myText6.anchorY = 1
+
+
+
+mapTouchArea = display.newRect(0, 0, 320, 320) -- (112, 96, 288, 360)
+mapTouchArea.anchorY = 0
+mapTouchArea.anchorX = 0
+mapTouchArea.isVisible = false
+mapTouchArea.isHitTestable = true
+
+mapTouchArea:addEventListener( 'touch', onScreenSwipeMap )
+
+
+
+
+	
+--[[
+        nrgProgressBar = display.newContainer(interfaceGroup,240,35)
+        nrgProgressBar.anchorChildren = false
+        nrgProgressBar.x = 516.5
+        nrgProgressBar.y = 451
+        nrgfillbar = display.newImageRect( nrgProgressBar, _Sheet, _Nfo:getFrameIndex("nrgfillbar-ui"), 240, 35 )
+        nrgfillbar.x = 0
+        nrgfillbar.y = 0
+
+]]
