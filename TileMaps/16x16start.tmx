@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="16" height="16" tilewidth="20" tileheight="20">
  <tileset firstgid="1" name="mapTiles" tilewidth="20" tileheight="20">
-  <properties>
-   <property name="" value=""/>
-  </properties>
-  <image source="../TileMap.png" width="100" height="100"/>
+  <image source="../images/TileMap.png" width="100" height="100"/>
  </tileset>
  <layer name="land" width="16" height="16">
   <properties>
    <property name="mapName" value="Geldoria"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJytk+EKACEIgyXP93/l46BgyGYe9WNEw08yXJhZXNAAKf/Tk8RqRuHnHlVd1fMP71MxT+yx45ENuHfm3LGK9ybLeCe8N/nM3ubZDqj/O+XxfYpdvNr1TgaqLKG3ZmD5OdELYH4DPw==
+   eJy1k8EKwDAIQ6XW///lsoMQQnRCt0MuqU+raJhZfKAFqvxHm6RiVuNzDozzhuGczDuIufSD3if1kQ1Ro+vzja14H7KKd8F3s+H+/+TVDlTzu+XxfxWbfLXrkxvobgm97EHdz40Ob0IDRA==
   </data>
  </layer>
 </map>
