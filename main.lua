@@ -237,7 +237,8 @@ onScreenSwipeMap = function( event )
 
 		end
 
-]]
+-- this works now
+]] 
 
 	---- MOVE THE MAP
 
