@@ -189,17 +189,14 @@ local onUpdate = function( event )
 
 end
 
-
---
--- Move the screen or touch a tile
---
+-- Move the screen
 onScreenSwipeMap = function( event )
 	
 	local moveMode = false
 
     local t = event.target
 	local phase = event.phase 
-	local minmov = 8	-- Minimum movement that registers if they are planning on dragging
+	local minmov = 20	-- Minimum movement that registers
 
 	if "began" == phase then
 		-- display.getCurrentStage():setFocus(t)
@@ -208,50 +205,58 @@ onScreenSwipeMap = function( event )
 		t.y0 = event.y
 		print ("Event.X:" .. event.x)
 		print ("Event.Y:" .. event.y)
-		myText7.text= ( "TouchState: " )
 
 	elseif ("ended" == phase or "cancelled" == phase) then --  and t.x0 ~= nil and t.y0 ~= nil then
-		moveMode = false
 		display.getCurrentStage():setFocus( nil )
 		t.isFocus = false
 		t.x0 = nil   
 		t.y0 = nil 
-		myText7.text= ( "TouchState: " )
 	end
 
-	if t.x0 ~= nil or t.y0 ~= nil then
-	---- CHECK TO SEE IF TOUCHED OR TOUCHED + DRAGGED
+	if t.x0 ~= nil and t.y0 ~= nil then
+	---- CHECK DOWN/UP
+		if (event.x - t.x0) < -(minmov) then		-- Swipe right   and areaSquareX < 204 
+		io.write("\nMOVING RIGHT!!!!     <-----I====================> t.x0="..event.x - t.x0)
+		
 
-		if (event.x - t.x0) > (minmov) or (event.x - t.x0) < -(minmov) or (event.y - t.y0) > minmov or (event.y - t.y0) < -minmov then -- Swipe Left    and areaSquareX > 92 
+		myMapGroup.x = myMapGroup.x + (event.x - t.x0)
+		--Destination.x = myMapGroup.x+(event.x - t.x0)
+		--myMapGroup.x = myMapGroup.x -1 -- myMapGroup.x+1(event.x - t.x0)
+		t.x0 = event.x
+		t.y0 = event.y
+		
+		
 
-			moveMode = true
-			myText7.text= ( "TouchState: touch + drag" )
-		else
-			myText7.text= ( "TouchState: touched" )
-			--t.isFocus = false
-			--t.x0 = nil   
-			--t.y0 = nil 
-			-- DO TILE SELECTION HERE...
+		elseif (event.x - t.x0) > (minmov) then -- Swipe Left    and areaSquareX > 92 
+		io.write ("\nMOVING LEFT!!!!     <-----I====================> t.x0="..event.x - t.x0)
+
+
+		myMapGroup.x = myMapGroup.x + (event.x - t.x0)
+		--Destination.x = myMapGroup.x+(event.x - t.x0)
+		--myMapGroup.x =  myMapGroup.x +1 -- myMapGroup.x+(event.x - t.x0)
+		t.x0 = event.x
+		t.y0 = event.y
 
 		end
+		
+		---- CHECK DOWN/UP
 
-	---- MOVE THE MAP
+		if (event.y - t.y0) > minmov then	-- Swipe Down     and areaSquareY > 408 
+		io.write ("\nMOVING UP!!!!     <-----I====================> t.x0="..event.y - t.y0)
+		
+		-- Destination.y = myMapGroup.y+(event.y - t.y0)
+		--myMapGroup.y =  myMapGroup.y +1 -- myMapGroup.y+(event.y - t.y0)
+		t.x0 = event.x
+		t.y0 = event.y
+		
 
-		if moveMode == true then
-			--myMapGroup.x = myMapGroup.x 
-			print ( "(event.x  - t.x0 ) :" .. (event.x  - t.x0 ) .. "Divided by 2 floor:" .. math.floor((event.x  - t.x0 )/.5) )
-			-- Check Bounds
-			if myMapGroup.x + (event.x  - t.x0 ) >0 then myMapGroup.x =0;elseif myMapGroup.x + (event.x  - t.x0 ) <-681 then myMapGroup.x =-681;else
-			-- moveMapX
-			myMapGroup.x = myMapGroup.x + (event.x  - t.x0 )
-			end
-
-			-- Check Bounds
-			if myMapGroup.y + (event.y  - t.y0 ) >0 then myMapGroup.y =0;elseif myMapGroup.y + (event.y  - t.y0 ) <-681 then myMapGroup.y =-681;else
-			-- moveMapY
-			myMapGroup.y = myMapGroup.y +(event.y  - t.y0 )
-			end
-
+		elseif (event.y - t.y0) < -minmov  then	-- Swipe Down    and areaSquareY < 456 
+		io.write ("\nMOVING DOWN!!!!     <-----I====================> t.x0="..event.y - t.y0)
+		
+		--Destination.y = myMapGroup.y+(event.y - t.y0)
+		--myMapGroup.y = myMapGroup.y -1 -- myMapGroup.y+(event.y - t.y0)
+		t.x0 = event.x
+		t.y0 = event.y
 		
 		end
 
@@ -288,8 +293,6 @@ myText5 .anchorX = 0 ; myText5.anchorY = 1
 myText6 = display.newText( "yBounds: "..  currentMap.yBounds, 330, 120, native.systemFont, 12 )
 myText6 .anchorX = 0 ; myText6.anchorY = 1
 
-myText7 = display.newText( "TouchState: " , 330, 160, native.systemFont, 12 )
-myText7 .anchorX = 0 ; myText7.anchorY = 1
 
 
 
