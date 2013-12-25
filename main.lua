@@ -195,7 +195,7 @@ end
 --
 onScreenSwipeMap = function( event )
 	
-	local moveMode = false
+	local moveMode = true
 
     local t = event.target
 	local phase = event.phase 
@@ -219,8 +219,10 @@ onScreenSwipeMap = function( event )
 		myText7.text= ( "TouchState: " )
 	end
 
-	if t.x0 ~= nil or t.y0 ~= nil then
+	if t.x0 ~= event.x or event.y ~= nil then
 	---- CHECK TO SEE IF TOUCHED OR TOUCHED + DRAGGED
+
+--[[
 
 		if (event.x - t.x0) > (minmov) or (event.x - t.x0) < -(minmov) or (event.y - t.y0) > minmov or (event.y - t.y0) < -minmov then -- Swipe Left    and areaSquareX > 92 
 
@@ -235,6 +237,8 @@ onScreenSwipeMap = function( event )
 
 		end
 
+]]
+
 	---- MOVE THE MAP
 
 		if moveMode == true then
@@ -244,12 +248,14 @@ onScreenSwipeMap = function( event )
 			if myMapGroup.x + (event.x  - t.x0 ) >0 then myMapGroup.x =0;elseif myMapGroup.x + (event.x  - t.x0 ) <-681 then myMapGroup.x =-681;else
 			-- moveMapX
 			myMapGroup.x = myMapGroup.x + (event.x  - t.x0 )
+					t.x0 = event.x
 			end
 
 			-- Check Bounds
 			if myMapGroup.y + (event.y  - t.y0 ) >0 then myMapGroup.y =0;elseif myMapGroup.y + (event.y  - t.y0 ) <-681 then myMapGroup.y =-681;else
 			-- moveMapY
 			myMapGroup.y = myMapGroup.y +(event.y  - t.y0 )
+					t.y0 = event.y
 			end
 
 		
