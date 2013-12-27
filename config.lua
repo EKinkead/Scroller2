@@ -8,7 +8,7 @@ application =
 		height = 480,
 		scale = "zoomstretch",
 		--scale = "zoomstretch", -- zoom to fill screen, possibly cropping edges
-		fps = 15
+		fps = 20
 	},
 }
 
