@@ -4,9 +4,6 @@ require ("loq_util")
 display.setStatusBar( display.HiddenStatusBar ) -- Get rid of that thing
 display.setDefault ("magTextureFilter", "nearest") -- make it nice and pixeled
 
-
-
-
 local currentMap = {}
 local myTable = {}
 local myText1
@@ -18,9 +15,12 @@ local myText6
 local myText7
 local myText8
 local myText9
+local mapClickXY 
 local Destination = {}
 Destination.x = 0
 Destination.y = 0
+
+local mapTileName = { "nothing", "grassy plains", "forests", "mountains", "sea", "castle"}
 
 local abs = math.abs
 local atan = math.atan
@@ -33,6 +33,14 @@ local sqrt = math.sqrt
 local floor = math.floor
 local cos = math.cos
 local sin = math.sin
+
+local MapTouchInfo = {}
+
+MapTouchInfo.x = 640
+MapTouchInfo.y = 320
+
+local containerWidth = 960
+local containerHeight = 640
 
 
 -- Test = display.newImage( "images/img_Backdrop2.png")
@@ -56,9 +64,12 @@ print (myTable.tileheight)
 
 
 currentMap.mapWidth = myTable.width -- This is how many items(rows) are in 1 row of a map.
-currentMap.mapHeigth = myTable.height -- This is how many down
+currentMap.mapheight = myTable.height -- This is how many down
 currentMap.TileSizeSquared = myTable.tileheight -- how many pixels a square
--- mapHeigth = 
+
+currentMap.tileWidth = myTable.tilewidth
+currentMap.tileHeight = myTable.tileheight
+-- mapheight = 
 currentMap.xBounds = myTable.tilewidth*myTable.width
 currentMap.yBounds = myTable.tileheight*myTable.height
 
@@ -102,8 +113,8 @@ local currentTile = {}
 local drawX = 0
 local drawY = 0
 
-for row=1, (currentMap.mapHeigth) do  -- This will start at the top first row and work down
-										   -- The reason it starts at 0 and to mapHeigth-1 is because of MAGIC STEP below...
+for row=1, (currentMap.mapheight) do  -- This will start at the top first row and work down
+										   -- The reason it starts at 0 and to mapheight-1 is because of MAGIC STEP below...
 
 			for column=1, (currentMap.mapWidth) do
 				-- mapLocation = mapLocation + 1 
@@ -137,10 +148,10 @@ end
 
 
 -- Put the map in a container
-containerWidth = 639
-containerHeight = 639
+
 local container = display.newContainer( containerWidth, containerHeight )
 container:insert( myMapGroup, true ) 
+
 
 
 function angle(x1, y1, x2, y2)
@@ -206,9 +217,41 @@ onScreenSwipeMap = function( event )
 		t.isFocus = true
 		t.x0 = event.x
 		t.y0 = event.y
-		print ("Event.X:" .. event.x)
-		print ("Event.Y:" .. event.y)
-		myText7.text= ( "TouchState: " )
+
+		--t.x0 = t.x0 + myMapGroup.x
+		--t.y0 = t.y0 + myMapGroup.y
+
+
+		
+		local tempX =  (math.floor ( ( (t.x0-1 + (myMapGroup.x*-1)) / currentMap.tileWidth ) ))+1
+		local tempY =  (math.floor ( ( (t.y0-1 + (myMapGroup.y*-1)) / currentMap.tileHeight ) ))+1
+		-- local tempY = ((math.floor ( ((t.y0)-1+(0))  / currentMap.tileHeight) )  )  + 1
+
+		--tempX = tempX + (myMapGroup.x * -1)
+		--tempY = tempY + (-1(myMapGroup.y * -1)
+
+		mapClickXY = (( (tempY-1) * currentMap.mapWidth ) + tempX )
+
+		myText7.text= ( "Touched State"  )
+		myText7_shdw.text= ( "Touched State"  )
+
+		myText8.text = ("t.x0:" .. t.x0)
+		myText8_shdw.text = ("t.x0:" .. t.x0)
+
+		myText9.text = ("tempX:" .. tempX)
+		myText9_shdw.text = ("tempX:" .. tempX)
+
+		myText10.text = ("t.y0:" .. t.y0)
+		myText10_shdw.text = ("t.y0:" .. t.y0)
+		myText11.text = ("tempY:" .. tempY)
+		myText11_shdw.text = ("tempY:" .. tempY)
+
+		myText12.text = ( "mapXY: " .. mapClickXY )
+		myText12_shdw.text = ( "mapXY: " .. mapClickXY )
+		myText13.text = ( "mapTile: " ..  mapTileName[currentMap.mapData[mapClickXY]] )
+		myText13_shdw.text = ( "mapTile: " .. mapTileName[currentMap.mapData[mapClickXY]] )
+		
+	
 
 	elseif ("ended" == phase or "cancelled" == phase) then --  and t.x0 ~= nil and t.y0 ~= nil then
 		moveMode = false
@@ -216,35 +259,20 @@ onScreenSwipeMap = function( event )
 		t.isFocus = false
 		t.x0 = nil   
 		t.y0 = nil 
-		myText7.text= ( "TouchState: " )
+		myText7.text= ( " " )
+		myText7_shdw.text= ( " " )
 	end
 
-	if t.x0 ~= event.x or event.y ~= nil then
+	if t.x0 ~= nil or t.y0 ~= nil then
 	---- CHECK TO SEE IF TOUCHED OR TOUCHED + DRAGGED
+	-- myText7.text= ( "x: " ..(event.x - t.x0) .." > minmov8"  )
 
---[[
-
-		if (event.x - t.x0) > (minmov) or (event.x - t.x0) < -(minmov) or (event.y - t.y0) > minmov or (event.y - t.y0) < -minmov then -- Swipe Left    and areaSquareX > 92 
-
-			moveMode = true
-			myText7.text= ( "TouchState: touch + drag" )
-		else
-			myText7.text= ( "TouchState: touched" )
-			--t.isFocus = false
-			--t.x0 = nil   
-			--t.y0 = nil 
-			-- DO TILE SELECTION HERE...
-
-		end
-
--- this works now
-]] 
 
 	---- MOVE THE MAP
 
 		if moveMode == true then
 			--myMapGroup.x = myMapGroup.x 
-			print ( "(event.x  - t.x0 ) :" .. (event.x  - t.x0 ) .. "Divided by 2 floor:" .. math.floor((event.x  - t.x0 )/.5) )
+			print ( "(event.x  - t.x0 ) :" .. (event.x  - t.x0 ) )
 			-- Check Bounds
 			if myMapGroup.x + (event.x  - t.x0 ) >0 then myMapGroup.x =0;elseif myMapGroup.x + (event.x  - t.x0 ) <-681 then myMapGroup.x =-681;else
 			-- moveMapX
@@ -258,13 +286,13 @@ onScreenSwipeMap = function( event )
 			myMapGroup.y = myMapGroup.y +(event.y  - t.y0 )
 					t.y0 = event.y
 			end
-
-		
 		end
 
 	end
 	myText3.text = ( "X: ".. myMapGroup.x)
+	myText3_shdw.text = ( "X: ".. myMapGroup.x)
 	myText4.text = ( "Y: ".. myMapGroup.y)
+	myText4_shdw.text = ( "Y: ".. myMapGroup.y)
 
 	--if myMapGroup.x >1 then myMapGroup.x=0;Destination.x=0;end
 	--if myMapGroup.y >1 then myMapGroup.y=0;Destination.y=0;end
@@ -274,36 +302,91 @@ onScreenSwipeMap = function( event )
 	return true
 end
 
+--createTextWithShadow("Thats So Panda",35,100, native.systemFont,20,2)
+--createTextWithShadow("Oh Yea",35,120, native.systemFont,20,2)
+--createTextWithShadow("uh huh",35,140, native.systemFont,20,2)
 
 
+local red = {0, 0, .2}
+infoBox = display.newRect(325, 5, 150 , 240 ) -- (112, 96, 288, 360)
+infoBox:setFillColor(unpack(red))
+infoBox.alpha = .8
+infoBox.anchorY = 0
+infoBox.anchorX = 0
 
+
+myText1_shdw= display.newText( "MapName: "..  myTable.layers[1].properties.mapName, 331, 21, native.systemFont, 12 )
+myText1_shdw:setTextColor(0,0,0,255); myText1_shdw.anchorX = 0 ; myText1_shdw.anchorY = 1
 myText1 = display.newText( "MapName: "..  myTable.layers[1].properties.mapName, 330, 20, native.systemFont, 12 )
-myText1.anchorX = 0 ; myText1.anchorY = 1
-
+myText1:setTextColor(255,255,0,255); myText1.anchorX = 0 ; myText1.anchorY = 1
+----
+myText2_shdw= display.newText( "MapType: "..  myTable.layers[1].name, 331, 41, native.systemFont, 12 )
+myText2_shdw:setTextColor(0,0,0,255); myText2_shdw.anchorX = 0 ; myText2_shdw.anchorY = 1
 myText2 = display.newText( "MapType: "..  myTable.layers[1].name, 330, 40, native.systemFont, 12 )
-myText2 .anchorX = 0 ; myText2.anchorY = 1
+myText2:setTextColor(255,255,0,255); myText2.anchorX = 0 ; myText2.anchorY = 1
 
+----
+myText3_shdw = display.newText( "X: ".. myMapGroup.x, 331, 61, native.systemFont, 12 )
+myText3_shdw:setTextColor(0,0,0,255); myText3_shdw.anchorX = 0 ; myText3_shdw.anchorY = 1
 myText3 = display.newText( "X: ".. myMapGroup.x, 330, 60, native.systemFont, 12 )
-myText3 .anchorX = 0 ; myText3.anchorY = 1
-
+myText3:setTextColor(255,255,0,255); myText3.anchorX = 0 ; myText3.anchorY = 1
+----
+myText4_shdw = display.newText( "Y: "..  myMapGroup.y, 331, 81, native.systemFont, 12 )
+myText4_shdw:setTextColor(0,0,0,255); myText4_shdw.anchorX = 0 ; myText4_shdw.anchorY = 1
 myText4 = display.newText( "Y: "..  myMapGroup.y, 330, 80, native.systemFont, 12 )
-myText4 .anchorX = 0 ; myText4.anchorY = 1
-
+myText4:setTextColor(255,255,0,255); myText4.anchorX = 0 ; myText4.anchorY = 1
+----
+myText5_shdw = display.newText( "xBounds: "..  currentMap.xBounds, 331, 101, native.systemFont, 12 )
+myText5_shdw:setTextColor(0,0,0,255); myText5_shdw.anchorX = 0 ; myText5_shdw.anchorY = 1
 myText5 = display.newText( "xBounds: "..  currentMap.xBounds, 330, 100, native.systemFont, 12 )
-myText5 .anchorX = 0 ; myText5.anchorY = 1
-
+myText5:setTextColor(255,255,0,255); myText5.anchorX = 0 ; myText5.anchorY = 1
+----
+myText6_shdw = display.newText( "yBounds: "..  currentMap.yBounds, 331, 121, native.systemFont, 12 )
+myText6_shdw:setTextColor(0,0,0,255); myText6_shdw.anchorX = 0 ; myText6_shdw.anchorY = 1
 myText6 = display.newText( "yBounds: "..  currentMap.yBounds, 330, 120, native.systemFont, 12 )
-myText6 .anchorX = 0 ; myText6.anchorY = 1
+myText6:setTextColor(255,255,0,255); myText6.anchorX = 0 ; myText6.anchorY = 1
+----
+myText7_shdw = display.newText( " " , 331, 161, native.systemFont, 12 )
+myText7_shdw:setTextColor(0,0,0,255); myText7_shdw.anchorX = 0 ; myText7_shdw.anchorY = 1
+myText7 = display.newText( " " , 330, 160, native.systemFont, 12 )
+myText7:setTextColor(255,255,0,255); myText7.anchorX = 0 ; myText7.anchorY = 1
+----
+myText8_shdw = display.newText( "TouchX: " , 331, 181, native.systemFont, 12 )
+myText8_shdw:setTextColor(0,0,0,255); myText8_shdw.anchorX = 0 ; myText8_shdw.anchorY = 1
+myText8 = display.newText( "TouchX: " , 330, 180, native.systemFont, 12 )
+myText8:setTextColor(255,255,0,255); myText8.anchorX = 0 ; myText8.anchorY = 1
+----
+myText9_shdw = display.newText( "TouchY: " , 331, 201, native.systemFont, 12 )
+myText9_shdw:setTextColor(0,0,0,255); myText9_shdw.anchorX = 0 ; myText9_shdw.anchorY = 1
+myText9 = display.newText( "TouchY: " , 330, 200, native.systemFont, 12 )
+myText9:setTextColor(255,255,0,255); myText9.anchorX = 0 ; myText9.anchorY = 1
+----
+myText10_shdw = display.newText( "TouchX: " , 409, 181, native.systemFont, 12 )
+myText10_shdw:setTextColor(0,0,0,255); myText10_shdw.anchorX = 0 ; myText10_shdw.anchorY = 1
+myText10 = display.newText( "TouchX: " , 408, 180, native.systemFont, 12 )
+myText10:setTextColor(255,255,0,255); myText10.anchorX = 0 ; myText10.anchorY = 1
+----
+myText11_shdw = display.newText( "TouchY: " , 409, 201, native.systemFont, 12 )
+myText11_shdw:setTextColor(0,0,0,255); myText11_shdw.anchorX = 0 ; myText11_shdw.anchorY = 1
+myText11 = display.newText( "TouchY: " , 408, 200, native.systemFont, 12 )
+myText11:setTextColor(255,255,0,255); myText11.anchorX = 0 ; myText11.anchorY = 1
+----
+myText12_shdw = display.newText( "mapXY: " , 331, 221, native.systemFont, 12 )
+myText12_shdw:setTextColor(0,0,0,255); myText12_shdw.anchorX = 0 ; myText12_shdw.anchorY = 1
+myText12 = display.newText( "mapXY: " , 330, 220, native.systemFont, 12 )
+myText12:setTextColor(255,255,0,255); myText12.anchorX = 0 ; myText12.anchorY = 1
+----
+myText13_shdw = display.newText( "mapTile: " , 331, 241, native.systemFont, 12 )
+myText13_shdw:setTextColor(0,0,0,255); myText13_shdw.anchorX = 0 ; myText13_shdw.anchorY = 1
+myText13 = display.newText( "mapTile: " , 330, 240, native.systemFont, 12 )
+myText13:setTextColor(255,255,0,255); myText13.anchorX = 0 ; myText13.anchorY = 1
 
-myText7 = display.newText( "TouchState: " , 330, 160, native.systemFont, 12 )
-myText7 .anchorX = 0 ; myText7.anchorY = 1
 
-
-
-mapTouchArea = display.newRect(0, 0, 320, 320) -- (112, 96, 288, 360)
+mapTouchArea = display.newRect(0, 0, MapTouchInfo.x , MapTouchInfo.x ) -- (112, 96, 288, 360)
 mapTouchArea.anchorY = 0
 mapTouchArea.anchorX = 0
 mapTouchArea.isVisible = false
+mapTouchArea.alpha = .3
 mapTouchArea.isHitTestable = true
 
 Destination.x = myMapGroup.x
