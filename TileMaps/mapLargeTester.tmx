@@ -18,14 +18,14 @@
    <property name="mapName" value="Ferathorn"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzVmNtuhDAMRBFkuw/8//+2KxHJcmdsxwkJ+2DRQi5z4tvCa9u2158d17Vc12+2nVj0+ROMaZRaveerzWOQHIewp7FEOeR4xPMNHFWznDea4yD7jOTQLHoviyWq79j++znDgmJe3/e06JqgtbH5iKE1/6z89daO+sFi6dkjysHO1NrzB+j83HtfV83irdcaU9Z6BxiH5pyCBZlkkRwj+pKlj8VZUVfPP5XhFCyszmTrXYRD39McRYwtlyGOt/g/Wu9acwTpRfFVdcq/pW50D8VY9Ix3sVbLHOTnQ635+f9ULHK8xeL1Er2/XCcbc6imFGCov+hnkfiwGEZweHVFMzCOei8SC/qcMprZfjpvdB1g6xRjTXb+vRze2UXOgHFE9kN1I9NL0Lq9fmw9OxSTGYbam6O6IvETzT3GkuWIxBbSH4khrUvn3UwOpN3yoRXvqPf21FzEYTEwdi/+LY7s+0fU95bfrDnRWLFYWhl6Odh45j+LI/o+3GMtfm+Nj1kMM+wu/SNitCfWR8dPZi7K3xUMGQ16nnz3mukX6yw9DTuYL2vuLJ8wDREWxK97/kwOpsNiiTKs4NC/m1iu6HrAvq/MzHN0pt63KpRDaI0n1Crvm1bk+Yr+0cqBcuDbOFhNyjJk3ytbY4v1BiuHWnvoHSwor9n7bEvP9M5uFEfEN6xfZxnYWc1i6fED47jDJ95+vQxeDo7msLiy87w6MYOjh5t9O0Qsq3UjDlTnrN9rT+WoLJbOp3Nojd641Vpn2i/BoSg9
+   eJzdmMluhDAQRC2WzIH//98kUpBaPVW92Rgmh9ZowEu93gzsrbX9n9lCLHr/CcY0Sq3e/bvNY5Acq7CnsUQ55HjE8wkcp2Y5bzTHSvYZyaFZ9F4WS1Tf2t7jXGFBOY9YvHX29s7usSCGbP159cvi4vkNMVj56e09g0PaF9D5e+3196tZvH2zORXlYOO3HzsECzLJIjlGnEssjy02xnGajs/JcAgW1meq/a6HQzPsgEVyvMT/aL/L1kgk95HJOOwNxwXlWNTHi1grM4fFWV8/lOZNjLVYvLOE+akn57Rp3YhBj83Ur8UwkqPCjHRFckHHtEdDJibRsRaD1N3LYfkO+UqPYXXCWNmalRq3fLOR+9k4ZnyHcrLCoPtRNA893zNj52mlxq1ay+iP5JDWFXk2uIoDabdiaOW79ZxT6bmIw2Jg7F7+WxzV949o7K24WXOiuWKxZBl6Odh4Fj+Lo/d9vVpL0bHe2rMYZthV+kfkaE+uj86fytwR33NGMFQ06HlnnY/8btfrS0/DAubLnjsrJkxDhAXx6zN/JgfTYbFEGe7g0M9NrFZ0P9D5OJuBxQNpYbpZXJ7Sq7RW73sXuz6TA8XF04lq4NM4WE+qMlTfK7O5xc4Gq4ayZ+gVLKiu2fts5sz0fDeKIxIbdl5XGZivZrH0xIFxXBETb79eBq8GR3NYXNV5Xp+YwdHDzb4dIpa7dSMO1Oes57Wncpwsls6nc2iN3ri7tc60byABKFw=
   </data>
  </layer>
  <objectgroup draworder="topdown" name="Blue Troop Layer" width="50" height="50">
   <properties>
    <property name="TroopType" value="Blue"/>
   </properties>
-  <object name="infantry" type="Blue" gid="26" x="280" y="280" width="20" height="20">
+  <object name="infantry" type="Blue" gid="26" x="60" y="60" width="20" height="20">
    <properties>
     <property name="attack" value="6"/>
     <property name="attackCounter" value="3"/>
@@ -36,7 +36,18 @@
     <property name="movePts" value="3"/>
    </properties>
   </object>
-  <object name="sorcerer" type="Blue" gid="26" x="60" y="40">
+  <object name="sorcerer" type="Blue" gid="26" x="20" y="60">
+   <properties>
+    <property name="attack" value="6"/>
+    <property name="attackCounter" value="3"/>
+    <property name="attackRange" value="1"/>
+    <property name="hitMax" value="10"/>
+    <property name="hitPts" value="10"/>
+    <property name="moveMax" value="3"/>
+    <property name="movePts" value="3"/>
+   </properties>
+  </object>
+  <object name="calvary" type="Blue" gid="26" x="0" y="60">
    <properties>
     <property name="attack" value="6"/>
     <property name="attackCounter" value="3"/>
@@ -58,18 +69,7 @@
     <property name="movePts" value="3"/>
    </properties>
   </object>
-  <object name="calvary" type="Blue" gid="26" x="40" y="20">
-   <properties>
-    <property name="attack" value="6"/>
-    <property name="attackCounter" value="3"/>
-    <property name="attackRange" value="1"/>
-    <property name="hitMax" value="10"/>
-    <property name="hitPts" value="10"/>
-    <property name="moveMax" value="3"/>
-    <property name="movePts" value="3"/>
-   </properties>
-  </object>
-  <object name="captain" type="Blue" gid="26" x="60" y="160">
+  <object name="captain" type="Blue" gid="26" x="80" y="60">
    <properties>
     <property name="attack" value="6"/>
     <property name="attackCounter" value="3"/>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="staggered" width="20" height="16" tilewidth="20" tileheight="20">
+ <tileset firstgid="1" name="land" tilewidth="20" tileheight="20">
+  <properties>
+   <property name="filename" value="images/MapTiles.png"/>
+   <property name="numberFrames" value="25"/>
+  </properties>
+  <image source="../images/MapTiles.png" width="100" height="100"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="16">
+  <properties>
+   <property name="mapName" value="Dargathron"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKRCQAFAAAB
+  </data>
+ </layer>
+</map>
