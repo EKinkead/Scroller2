@@ -528,23 +528,21 @@ mapTouchArea.isHitTestable = true  -- these guys are magic. they make it so invi
 --Destination.x = myMapGroup.y
 
 
-
-
 local Button_ZoomUpReleased = function( event )
 
 -- containerHeight = .3 
 -- container
-	ScaleAdjust = ScaleAdjust + 0.10
+	ScaleAdjust = ScaleAdjust + 0.20
 
 	if ScaleAdjust > 2 then
-		ScaleAdjust = 4
+		ScaleAdjust = 2
 		print ("NO! The Limit scaleUp has been hit!")
 	else
-		container:scale (1.1,1.1)
+		
 	end
+	container.xScale, container.yScale = ScaleAdjust,ScaleAdjust
 
-
-	container:scale( ScaleAdjust, ScaleAdjust )
+	
 
 	--container:rotate( 24 )
 	print ("ScaleAdjust = " .. ScaleAdjust)
@@ -564,13 +562,15 @@ local Button_ZoomDownReleased = function( event )
 -- containerHeight = .3 
 -- container
 
-	ScaleAdjust = ScaleAdjust - 0.10
+	ScaleAdjust = ScaleAdjust - 0.20
 	if ScaleAdjust < 1 then
 		ScaleAdjust = 1
 		print ("NO! The Limit scaleDown has been hit!")
 	else
-		container:scale( .90, .90 )
+		-- container:scale( .80, .80 )
 	end
+	container.xScale, container.yScale = ScaleAdjust,ScaleAdjust
+
 
 		print ( "ScaleAdjust = " .. ScaleAdjust )
 	print ("DOWN BUTTON" .. "  / containerHeight=" .. containerHeight)
