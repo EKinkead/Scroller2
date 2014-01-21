@@ -6,7 +6,7 @@ application =
 	{
 		width = 320,
 		height = 480,
-		scale = "zoomstretch",
+		scale = "zoomStretch", -- zoomEven
 		--scale = "zoomstretch", -- zoom to fill screen, possibly cropping edges
 		fps = 20
 	},
@@ -28,7 +28,7 @@ end
 application = {
     content = {
         width = w, height = h,
-        scale = 'letterbox',
+        scale = '',
         imageSuffix = {['@2x'] = 1.2, ['@4x'] = 2.5},
         fps = 60
                 }}

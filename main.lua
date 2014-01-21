@@ -35,7 +35,7 @@ TTTTTT  T:::::T  TTTTTT  I::::I    L:::::L                 E:::::E       EEEEEE
 ]]
 require ("loq_util") -- so I can atrace,
 display.setStatusBar( display.HiddenStatusBar ) -- Get rid of that thing
-display.setDefault ("magTextureFilter", "nearest") -- make it nice and pixeled
+ display.setDefault ("magTextureFilter", "nearest") -- make it nice and pixeled
 
 --set the required vars and tables.
 local currentMap = {}
@@ -187,11 +187,11 @@ for row=1, (currentMap.mapheight) do  -- This will start at the top first row an
 				currentTile.anchorX = 0 ; currentTile.anchorY = 0
 
 				if odd(row) then
-				currentTile.x = (currentTile.x + (column-1) * currentMap.tileWidth) ---+ OffsetX  -- more MAGIC STEP. since we set that first row to ZERO, if you are on it it won't multiply an extra 20
- 				currentTile.y = (currentTile.y + drawY) -- + OffsetY
+				currentTile.x = math.floor((currentTile.x + (column-1) * currentMap.tileWidth)) ---+ OffsetX  -- more MAGIC STEP. since we set that first row to ZERO, if you are on it it won't multiply an extra 20
+ 				currentTile.y = math.floor((currentTile.y + drawY)) -- + OffsetY
  				else
-				currentTile.x = (currentTile.x + (column-1) * currentMap.tileWidth) +(currentMap.tileWidth * .5) --+ OffsetX  -- more MAGIC STEP. since we set that first row to ZERO, if you are on it it won't multiply an extra 20
- 				currentTile.y = (currentTile.y + drawY) - (currentMap.tileWidth * .25)   -- + OffsetY
+				currentTile.x = math.floor((currentTile.x + (column-1) * currentMap.tileWidth) +(currentMap.tileWidth * .5)) --+ OffsetX  -- more MAGIC STEP. since we set that first row to ZERO, if you are on it it won't multiply an extra 20
+ 				currentTile.y = math.floor((currentTile.y + drawY) - (currentMap.tileWidth * .25) )  -- + OffsetY
  				end
 
  				myMapGroup:insert(currentTile)
@@ -200,9 +200,9 @@ for row=1, (currentMap.mapheight) do  -- This will start at the top first row an
 
 			if odd(row) then
 
-			drawY = (drawY + currentMap.tileHeight) -- + OffsetY -- this advances tiles in Y (or rows) so the tiledrawn down 1 on the app screen
+			drawY = math.floor((drawY + currentMap.tileHeight)) -- + OffsetY -- this advances tiles in Y (or rows) so the tiledrawn down 1 on the app screen
 			else
-			drawY = (drawY + currentMap.tileHeight) - (currentMap.tileWidth * .5) 
+			drawY = math.floor((drawY + currentMap.tileHeight) - (currentMap.tileWidth * .5) )
 			end
 
 end
@@ -534,8 +534,8 @@ local Button_ZoomUpReleased = function( event )
 -- container
 	ScaleAdjust = ScaleAdjust + 0.20
 
-	if ScaleAdjust > 2 then
-		ScaleAdjust = 2
+	if ScaleAdjust > 4 then
+		ScaleAdjust = 4
 		print ("NO! The Limit scaleUp has been hit!")
 	else
 		
